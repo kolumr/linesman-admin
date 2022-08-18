@@ -54,7 +54,7 @@ function Dashboard() {
                 <td>{warranty.WarrantyID}</td>
                 <td>{warranty.ModelNo}</td>
                 <td>{warranty.MobileNo}</td>
-                <td style={{"color":"red"}}>Pending</td>
+                <td style={{"color":"red"}}>Approved</td>
                 <td style={{"color":"green"}}>View</td>
               </tr>
             )
