@@ -3,9 +3,9 @@ import { getToken, getUser, removeUserSession } from '../../utils/common';
 import {useNavigate} from'react-router-dom'
 import Table from 'react-bootstrap/Table';
 import axios from 'axios';
-import { Button } from 'bootstrap';
 
-function Dashboard() {
+
+function PendingWarranties() {
   const user = getUser();
   let navigate = useNavigate();
   const [isLoading, setIsLoading] =useState(false); 
@@ -34,8 +34,6 @@ function Dashboard() {
   },[])
   return (
     <div>
-      Welcome {user.firstName}!<br /><br />
-      <input type="button" onClick={handleLogout} value="Logout" />
       {isLoading? <div>Loading.....</div>: 
       <Table responsive striped bordered hover>
         <thead>
@@ -66,4 +64,4 @@ function Dashboard() {
   );
 }
 
-export default Dashboard;
+export default PendingWarranties;
