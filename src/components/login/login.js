@@ -19,6 +19,7 @@ function Login(props) {
     .then(response => {
       setLoading(false);
       setUserSession(response.data.data.token, response.data.data);
+      console.log(response.data.data.token)
       navigate('/registeredWarranties',{ replace: true });
     }).catch(error => {
       setLoading(false);

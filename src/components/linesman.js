@@ -2,36 +2,28 @@ import React, { useState } from 'react'
 import {useLocation} from 'react-router-dom';
 import Table from 'react-bootstrap/Table';
 import { Button } from 'react-bootstrap';
-function Warranty() {
-    const [warranty,setWarranty] = useState([]);
+function Linesman() {
+    const [linesman,setLinesman] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [status, setStatus] = useState(false);
     const location = useLocation()
     const incentivedb = [];
-    const linesmanid =20;
     const display =()=>{
         for (const [key,value] of Object.entries(location.state)) {
-           warranty.push([key,value])
+           linesman.push([key,value])
         }
-        console.log(warranty);
+        console.log(linesman);
     }
     display();
-    const addPoints= async ()=>{
-        //use linesman id and model number
-        //find incentive amount using model number
-        const points = incentivedb.filter((item)=>{
-            if(item.modelNumber === warranty.modelNumber){
-                return item.incentiveAmount
-            }
-            return false;
-        })
-        //take the points and update linesman account
+    const approveLinesman = async ()=>{
+       
         try{
-            let response = await fetch({URL:`https://mikaappliances.com/wp-json/acf/v3/users/${linesmanid}?fields[points]=`,
+            let response = await fetch({URL:`https://mikaappliances.com/wp-json/acf/v3/users/${location.state.id}?fields[linesman]=${status}`,
             method:'post',
             body: JSON.stringify({
                 "acf": 
                 {      
-                     "points": points
+                     "linesmanapprove": status
                 }
             })
         }); let json = await response.json();
@@ -48,11 +40,7 @@ function Warranty() {
        
       }
     }
-    const approve= () =>{
-        //update status of warranty to approved
-        //then add points to linesman
-        addPoints();
-    }
+ 
   return (
     <div>
         <Table bordered size='sm' >
@@ -64,7 +52,7 @@ function Warranty() {
                 
             </thead>
             <tbody>
-             { warranty.map((e) =>{
+             { linesman.map((e) =>{
                 return(
                 <tr>
                     <td>{e[0]}</td>
@@ -74,10 +62,10 @@ function Warranty() {
                 }
             </tbody>
         </Table>
-        <Button>Approve</Button>
+        <Button onClick={approveLinesman}>Approve</Button>
     </div>
 
   )
 }
 
-export default Warranty
+export default Linesman;

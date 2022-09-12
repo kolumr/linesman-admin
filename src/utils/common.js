@@ -6,8 +6,8 @@ export const getUser = () => {
   }
   
   // return the token from the session storage
-  export const getToken = () => {
-    return sessionStorage.getItem('token') || null;
+  export const getToken = async () => {
+    return await sessionStorage.getItem('token') || null;
   }
   
   // remove the token and user from the session storage

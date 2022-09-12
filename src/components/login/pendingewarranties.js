@@ -16,11 +16,14 @@ function PendingWarranties() {
     navigate('/login',{replace:true});
   }
   useEffect(() =>{
-    const token = getToken();
-    
+    async function fetchdata(){
+    const tokens = await getToken();
+    const token =`Bearer ${tokens}`
+    console.log(token)
+    if(tokens === null)navigate('/login',{replace:true});
       setIsLoading(true);
       axios({url:'https://mikaappliances.com/wp-json/get/allwarrantyreg',
-      headers:{authorization:`Bearer ${token}`},
+      headers:{authorization:token},
       method: 'get'})
       .then(response=>{
         setWarranties(response.data.data)
@@ -30,7 +33,8 @@ function PendingWarranties() {
         setIsLoading(false);
         console.log(error)
       });
-    
+    }
+    fetchdata();
   },[])
   return (
     <div>

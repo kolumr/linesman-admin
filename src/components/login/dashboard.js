@@ -16,11 +16,14 @@ function Dashboard() {
     navigate('/login',{replace:true});
   }
   useEffect(() =>{
-    const token = getToken();
-    
+    async function fetchdata(){
+    const tokens = await getToken();
+    const token = `Bearer ${tokens}`
+    console.log(token)
+    if(token === null)navigate('/login',{replace:true});
       setIsLoading(true);
       axios({url:'https://mikaappliances.com/wp-json/get/allwarrantyreg',
-      headers:{authorization:`Bearer ${token}`},
+      headers:{authorization:token},
       method: 'get'})
       .then(response=>{
         setWarranties(response.data.data)
@@ -30,11 +33,12 @@ function Dashboard() {
         setIsLoading(false);
         console.log(error)
       });
-    
+    }
+    fetchdata();
   },[])
   return (
     <div>
-      Welcome {user.firstName}!<br /><br />
+      Welcome!<br /><br />
       <input type="button" onClick={handleLogout} value="Logout" />
       {isLoading? <div>Loading.....</div>: 
       <Table responsive striped bordered hover>

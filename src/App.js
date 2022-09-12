@@ -8,6 +8,7 @@ import Home from '../src/components/login/home';
 import Warranty from './components/login/warranty';
 import UserApproval from './components/login/userApproval';
 import PendingWarranties from './components/login/pendingewarranties';
+import Linesman from './components/linesman';
 
 function App() {
   // const [authLoading, setAuthLoading] = useState(true);
@@ -52,6 +53,7 @@ function App() {
               <Route path="/warranty" element={<Warranty/>} />
               <Route path="/userApproval" element={<UserApproval/>} />
               <Route path="/pendingWarranties" element={<PendingWarranties/>} />
+              <Route path="/linesman" element={<Linesman/>} />
             </Routes>
           </div>
         </div>
