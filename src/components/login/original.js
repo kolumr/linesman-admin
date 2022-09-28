@@ -6,8 +6,7 @@ import Table from 'react-bootstrap/Table';
 import {useNavigate} from'react-router-dom'
 function UserApproval() {
   const [isLoading, setIsLoading] =useState(false); 
-  let linesmens = []
-  const [linesmen,setLinesmen] = useState([])
+  const [linesmen,setLinesmen] = useState([]);
   const [newLinesmen,setNewLinesmen] = useState([]);
   const token = useRef(null);
   const response_ = useRef();
@@ -27,20 +26,20 @@ function UserApproval() {
     [245239379, 254720940007],
     [14573970, 254732204064],
   ]
-  const fetchLinesmanapprove = (id) => {
-    linesmens = []
-
+  const fetchLinesmanapprove = () => {
+    console.log("Starting...")
+  console.log(includeString)
       axios({
-        url:`https://mikaappliances.com/wp-json/wp/v2/users?include=${id}`,
+        url:`https://mikaappliances.com/wp-json/wp/v2/users?include=${includeString}`,
         headers: {authorization:token.current},
         method:'get',
         })
       .then((response) => {
-        linesmens.push(response.data[0]);  
-        setTimeout(() => {
-          setIsLoading(false)
-          setLinesmen(linesmens)
-        }, 7000);  
+      
+        setLinesmen(response.data);    
+        setIsLoading(false)
+       
+        console.log(linesmen)
       }
       )
       .catch(function (error) {
@@ -49,6 +48,9 @@ function UserApproval() {
       
     
   }
+  const getLinesmanApprove = (id) =>{
+    let arr = response_.current.filter((e)=>{if(e.id === id) return e})
+  }
 useEffect(()=>{
   setIsLoading(true)
   async function fetchdata(){
@@ -56,13 +58,16 @@ useEffect(()=>{
   token.current = `Bearer ${tokens}`
 console.log(token.current)
   axios({
-    url:`https://mikaappliances.com/wp-json/wc/v3/customers?role=linesman&per_page=100&orderby=registered_date&order=desc`,
+    url:`https://mikaappliances.com/wp-json/wc/v3/customers?role=linesman&per_page=100`,
     headers:{authorization:token.current},
     method:'get',})
     .then(response=>{
+    console.log(response.data)
     setNewLinesmen(response.data)
+    includeString =''
       response.data.map((linesman)=>{
-        fetchLinesmanapprove(linesman.id)
+        includeString+=`${linesman.id}` +","
+        console.log(includeString)
        }) 
   }).catch(error =>{
     setIsLoading(false);
@@ -71,6 +76,9 @@ console.log(token.current)
   
 }
 fetchdata();
+setTimeout(() => {
+  fetchLinesmanapprove();
+}, 5000);
 },[])
 function display (linesmanapprove) {
   if(linesmanapprove = false){return "approve"}
@@ -97,8 +105,8 @@ function display (linesmanapprove) {
           // eslint-disable-next-line array-callback-return
           linesmen.map((linesman) =>{
              count=count + 1;
-             
-             if( linesman.acf.linesmanapprove === 'false')
+            //  console.log('hey'+linesman.acf)
+             if(linesman.acf.linesmanapprove === null || linesman.acf.linesmanapprove === true)
             return(
               <tr key={linesman.id} onClick = {() => {navigate('/linesman', {state:[linesman,token.current]})} }>
                 <td>{linesman.acf.national_id}</td>
@@ -109,7 +117,7 @@ function display (linesmanapprove) {
                 <td>{linesman.acf.email}</td>
                 <td>{linesman.date_created}</td>
                 {isLoading? <td></td> :
-                <td style={{"color":"green"}}>View</td>}
+                <td style={{"color":"green"}}>{display()}</td>}
               </tr>
             )
           })}

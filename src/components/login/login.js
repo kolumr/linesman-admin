@@ -34,7 +34,7 @@ function Login(props) {
       <form className="Auth-form">
       
         <div className="Auth-form-content">
-        <img className='logo-image' src={logo}/>
+        <img className='logo-image' src={logo} alt='logo'/>
           <h3 className="Auth-form-title">Sign In</h3>
           <div className="form-group mt-3">
             <label>Username</label>

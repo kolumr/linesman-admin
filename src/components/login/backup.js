@@ -6,9 +6,8 @@ import Table from 'react-bootstrap/Table';
 import {useNavigate} from'react-router-dom'
 function UserApproval() {
   const [isLoading, setIsLoading] =useState(false); 
-  let linesmens = []
-  const [linesmen,setLinesmen] = useState([])
-  const [newLinesmen,setNewLinesmen] = useState([]);
+  const [linesmen,setLinesmen] = useState([]);
+  let newLinesmen = []
   const token = useRef(null);
   const response_ = useRef();
   let navigate = useNavigate();
@@ -27,50 +26,82 @@ function UserApproval() {
     [245239379, 254720940007],
     [14573970, 254732204064],
   ]
-  const fetchLinesmanapprove = (id) => {
-    linesmens = []
-
+  const fetchLinesmanapprove = async(data) => {
+    console.log("Starting...")
+     var mapStatus = await data.map((linesman)=>{
+      // includeString+=`${linesman.id}` +","
+      // console.log(includeString)
       axios({
-        url:`https://mikaappliances.com/wp-json/wp/v2/users?include=${id}`,
+        url:`https://mikaappliances.com/wp-json/wp/v2/users?include=${linesman.id}`,
         headers: {authorization:token.current},
         method:'get',
         })
       .then((response) => {
-        linesmens.push(response.data[0]);  
-        setTimeout(() => {
-          setIsLoading(false)
-          setLinesmen(linesmens)
-        }, 7000);  
+      
+        newLinesmen.push([linesman, response.data[0].acf]);    
+        
+       console.log(newLinesmen)
+        
       }
       )
       .catch(function (error) {
         console.log(error);
       })
       
-    
+     }) 
+      console.log(mapStatus)
+    if (mapStatus){setIsLoading(false)}
+  }
+  const getLinesmanApprove = (id) =>{
+    let arr = response_.current.filter((e)=>{if(e.id === id) return e})
   }
 useEffect(()=>{
+  
   setIsLoading(true)
   async function fetchdata(){
   const tokens = await getToken();
   token.current = `Bearer ${tokens}`
 console.log(token.current)
-  axios({
-    url:`https://mikaappliances.com/wp-json/wc/v3/customers?role=linesman&per_page=100&orderby=registered_date&order=desc`,
+ await axios({
+    url:`https://mikaappliances.com/wp-json/wc/v3/customers?per_page=100&role=linesman`,
     headers:{authorization:token.current},
     method:'get',})
     .then(response=>{
-    setNewLinesmen(response.data)
-      response.data.map((linesman)=>{
-        fetchLinesmanapprove(linesman.id)
+    setLinesmen(response.data)
+    // fetchLinesmanapprove(response.data)
+    newLinesmen = [];
+     const requests = response.data.map((linesman)=>{
+        // includeString+=`${linesman.id}` +","
+        // console.log(includeString)
+        axios({
+          url:`https://mikaappliances.com/wp-json/wp/v2/users?include=${linesman.id}`,
+          headers: {authorization:token.current},
+          method:'get',
+          })
+        .then((response) => {
+        
+          newLinesmen.push([linesman, response.data[0].acf]);    
+          
+         console.log(newLinesmen)
+          
+        }
+        )
+        .catch(function (error) {
+          console.log(error);
+        })
+        
        }) 
+      return Promise.all(requests).then(()=>{setIsLoading(false); console.log(newLinesmen)})
+       
   }).catch(error =>{
     setIsLoading(false);
     console.log(error)
   });
   
+  
 }
 fetchdata();
+
 },[])
 function display (linesmanapprove) {
   if(linesmanapprove = false){return "approve"}
@@ -95,21 +126,22 @@ function display (linesmanapprove) {
         <tbody>
           {
           // eslint-disable-next-line array-callback-return
-          linesmen.map((linesman) =>{
+          newLinesmen.map((linesman) =>{
+            
              count=count + 1;
-             
-             if( linesman.acf.linesmanapprove === 'false')
+            //  console.log('hey'+linesman.acf)
+             if(linesman[1].linesmanapprove === null || linesman[1].linesmanapprove === 'false')
             return(
-              <tr key={linesman.id} onClick = {() => {navigate('/linesman', {state:[linesman,token.current]})} }>
-                <td>{linesman.acf.national_id}</td>
+              <tr key={linesman[0].id} onClick = {() => {navigate('/linesman', {state:[linesman,token.current]})} }>
+                <td>{linesman[1].national_id}</td>
                 {/* <td>{dummydata[count][1]}</td> */}
-                <td>{linesman.name}</td>
-                <td>{linesman.acf.phone_number}</td>
-                <td>{linesman.acf.store}</td>
-                <td>{linesman.acf.email}</td>
-                <td>{linesman.date_created}</td>
+                <td>{linesman[1].name}</td>
+                <td>{linesman[1].acf.phone_number}</td>
+                <td>{linesman[1].acf.store}</td>
+                <td>{linesman[1].acf.email}</td>
+                <td>{linesman[1].date_created}</td>
                 {isLoading? <td></td> :
-                <td style={{"color":"green"}}>View</td>}
+                <td style={{"color":"green"}}>{display()}</td>}
               </tr>
             )
           })}

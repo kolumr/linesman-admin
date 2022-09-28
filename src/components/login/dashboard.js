@@ -45,10 +45,13 @@ function Dashboard() {
         <thead>
         <tr>
           <th>Warranty Id</th>
-          <th>Model no</th>
+          <th>Customer Name</th>
           <th>Customer Mobile Number</th>
-          <th>Status</th>
-          <th>Action</th>
+          <th>Product Name</th>
+          <th>Model no</th>
+          <th>Purchase Date</th>
+          <th>Registration Date</th>
+          <th>Warranty Period</th>
         </tr>
         </thead>
         <tbody>
@@ -56,10 +59,13 @@ function Dashboard() {
             return(
               <tr onClick={() => navigate('/warranty',{state:warranty})}>
                 <td>{warranty.WarrantyID}</td>
-                <td>{warranty.ModelNo}</td>
+                <td>{warranty.CustomerName}</td>
                 <td>{warranty.MobileNo}</td>
-                <td style={{"color":"red"}}>Approved</td>
-                <td style={{"color":"green"}}>View</td>
+                <td>{warranty.ProductName}</td>
+                <td>{warranty.ModelNo}</td>
+                <td>{warranty.DateOfPurchase}</td>
+                <td>{warranty.DateOfRegistration}</td>
+                <td>{warranty.WarrantyPeriod}</td>
               </tr>
             )
           })}
