@@ -39,16 +39,15 @@ function App() {
       <BrowserRouter>
         <div>
           <div className="header">
-            <NavLink exact activeClassName="active" to="/">Home</NavLink>
-            <NavLink activeClassName="active" to="/login">Login</NavLink>
+            <NavLink activeClassName="active" to="/">Login</NavLink>
             <NavLink activeClassName="active" to="/registeredWarranties">Registered Warranties</NavLink>
             <NavLink activeClassName="active" to="/pendingWarranties">Pending Warranties</NavLink>
             <NavLink activeClassName="active" to="/userApproval">Linesmen Approval</NavLink>
           </div>
           <div className="content">
             <Routes>
-              <Route exact path="/" element={<Home/>} />
-              <Route path="/login" element={<Login/>} />
+              
+              <Route path="/" element={<Login/>} />
               <Route path="/registeredWarranties" element={<Dashboard/>} />
               <Route path="/warranty" element={<Warranty/>} />
               <Route path="/userApproval" element={<UserApproval/>} />
